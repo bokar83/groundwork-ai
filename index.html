@@ -377,11 +377,11 @@
     }
 
     .score-number {
-      font-size: 96px;
+      font-size: 104px;
       font-weight: 900;
       line-height: 1;
       letter-spacing: -4px;
-      margin-bottom: 8px;
+      margin-bottom: 12px;
     }
 
     .score-number.red    { color: var(--red); }
@@ -622,10 +622,48 @@
       box-shadow: 0 4px 16px rgba(44,74,124,0.30);
     }
 
+    .btn-cta-primary {
+      font-size: 1.0625rem;
+    }
+
     .btn-cta-primary:hover {
       transform: translateY(-2px);
       box-shadow: 0 8px 24px rgba(44,74,124,0.40);
     }
+
+    /* ── Demo FAB ─────────────────────────────────────────── */
+    .demo-fab {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      z-index: 50;
+      background: var(--navy);
+      color: var(--teal);
+      font-family: inherit;
+      font-size: 0.9375rem;
+      font-weight: 800;
+      letter-spacing: 0.2px;
+      border: none;
+      border-radius: 999px;
+      padding: 14px 24px;
+      cursor: pointer;
+      box-shadow: 0 6px 24px rgba(44,74,124,0.35);
+      transition: transform 0.15s, box-shadow 0.15s, background 0.15s;
+    }
+
+    .demo-fab:hover {
+      background: var(--navy2);
+      transform: translateY(-2px);
+      box-shadow: 0 10px 30px rgba(44,74,124,0.45);
+    }
+
+    .demo-fab:active { transform: translateY(0); }
+
+    @media (max-width: 520px) {
+      .demo-fab { bottom: 16px; right: 16px; padding: 12px 18px; font-size: 0.875rem; }
+    }
+
+    @media print { .demo-fab { display: none !important; } }
 
     .btn-cta-secondary {
       background: rgba(255,255,255,0.18);
@@ -854,6 +892,9 @@
   <footer class="footer">
     <a href="#">Groundwork AI</a> — Built by <a href="https://catalystworks.consulting" target="_blank">Catalyst Works</a>. Free tool. No signup required.
   </footer>
+
+  <!-- Demo button (fixed, bottom-right) -->
+  <button type="button" id="demo-btn" class="demo-fab" aria-label="View a sample demo report">View Demo →</button>
 </div>
 
 
@@ -1515,6 +1556,30 @@ document.getElementById('audit-form').addEventListener('submit', function(e) {
     document.getElementById(id).classList.remove('error');
     document.getElementById('err-' + id).classList.remove('visible');
   });
+});
+
+// ── Demo mode ─────────────────────────────────────────────
+// Pre-seeds realistic sample data and runs the audit so anyone can see
+// a full report in one click (hackathon demo / cold-traffic preview).
+
+const DEMO_DATA = {
+  industry: 'legal',
+  size: '3',
+  task1: 'I manually review and respond to every client intake form. Takes 3-4 hours per day and I miss follow-ups constantly.',
+  task2: 'Client onboarding emails get sent manually one by one. When I forget, new clients go silent for days.',
+  task3: 'We double-bill clients because two team members log hours in different places. Costs us $2-3K per month in write-offs.',
+};
+
+document.getElementById('demo-btn').addEventListener('click', () => {
+  // Reflect the sample data back into the form so "Run another audit"
+  // shows a populated, editable starting point.
+  document.getElementById('industry').value = DEMO_DATA.industry;
+  document.getElementById('size').value     = DEMO_DATA.size;
+  document.getElementById('task1').value    = DEMO_DATA.task1;
+  document.getElementById('task2').value    = DEMO_DATA.task2;
+  document.getElementById('task3').value    = DEMO_DATA.task3;
+  updateProgress();
+  runAudit(DEMO_DATA.industry, DEMO_DATA.size, DEMO_DATA.task1, DEMO_DATA.task2, DEMO_DATA.task3);
 });
 
 // ── Restart ───────────────────────────────────────────────
