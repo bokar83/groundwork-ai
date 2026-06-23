@@ -4,6 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Groundwork AI | AI Readiness Audit</title>
+  <link rel="icon" href="assets/cw-icon.ico" type="image/x-icon" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
@@ -70,6 +71,26 @@
       align-items: center;
       gap: 6px;
       text-decoration: none;
+    }
+
+    /* Catalyst Works brand mark -- sits in a white chip so the dark-bg
+       logo reads as an intentional coin on the navy nav. */
+    .cw-mark {
+      height: 32px;
+      width: 32px;
+      border-radius: 8px;
+      object-fit: cover;
+      background: var(--white);
+      box-shadow: 0 1px 4px rgba(0,0,0,0.18);
+      flex-shrink: 0;
+    }
+
+    .nav-divider {
+      width: 1px;
+      height: 22px;
+      background: rgba(255,255,255,0.25);
+      margin: 0 10px;
+      flex-shrink: 0;
     }
 
     .logo-dot {
@@ -665,6 +686,120 @@
 
     @media print { .demo-fab { display: none !important; } }
 
+    /* ── Email gate modal ─────────────────────────────────── */
+    .gate-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 100;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      /* Light wash, not a black-out -- the report stays visible behind. */
+      background: rgba(247,246,242,0.55);
+      backdrop-filter: blur(3px);
+      -webkit-backdrop-filter: blur(3px);
+    }
+
+    .gate-overlay.visible { display: flex; animation: gateFade 0.25s ease both; }
+
+    @keyframes gateFade { from { opacity: 0; } to { opacity: 1; } }
+
+    .gate-card {
+      background: var(--white);
+      border-radius: 18px;
+      box-shadow: 0 20px 60px rgba(44,74,124,0.28);
+      border-top: 4px solid var(--teal);
+      padding: 36px 32px 28px;
+      width: 100%;
+      max-width: 440px;
+      text-align: center;
+      animation: gateRise 0.32s cubic-bezier(0.16,1,0.3,1) both;
+    }
+
+    @keyframes gateRise {
+      from { opacity: 0; transform: translateY(28px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .gate-check {
+      width: 52px;
+      height: 52px;
+      margin: 0 auto 16px;
+      background: rgba(34,197,94,0.12);
+      color: var(--green);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      font-weight: 800;
+    }
+
+    .gate-heading {
+      font-size: 1.4rem;
+      font-weight: 800;
+      color: var(--navy);
+      letter-spacing: -0.3px;
+      margin-bottom: 8px;
+    }
+
+    .gate-sub {
+      font-size: 0.9375rem;
+      color: var(--gray700);
+      line-height: 1.55;
+      margin-bottom: 22px;
+    }
+
+    .gate-input {
+      width: 100%;
+      font-family: inherit;
+      font-size: 1rem;
+      color: var(--navy);
+      background: var(--white);
+      border: 1.5px solid var(--gray300);
+      border-radius: var(--radius);
+      padding: 14px 16px;
+      outline: none;
+      transition: border-color 0.18s, box-shadow 0.18s;
+      margin-bottom: 6px;
+    }
+
+    .gate-input:focus {
+      border-color: var(--teal);
+      box-shadow: 0 0 0 3px rgba(232,160,32,0.20);
+    }
+
+    .gate-input.error {
+      border-color: var(--red);
+      box-shadow: 0 0 0 3px rgba(224,82,82,0.12);
+    }
+
+    .gate-error {
+      font-size: 0.8rem;
+      color: var(--red);
+      text-align: left;
+      margin-bottom: 12px;
+      display: none;
+    }
+
+    .gate-error.visible { display: block; }
+
+    .gate-submit { margin-top: 10px; }
+
+    .gate-skip {
+      display: inline-block;
+      margin-top: 16px;
+      font-size: 0.85rem;
+      color: var(--gray500);
+      cursor: pointer;
+      text-decoration: underline;
+    }
+
+    .gate-skip:hover { color: var(--navy); }
+
+    @media print { .gate-overlay { display: none !important; } }
+
     .btn-cta-secondary {
       background: rgba(255,255,255,0.18);
       color: var(--white);
@@ -795,7 +930,7 @@
 ══════════════════════════════════════════════════════════ -->
 <div id="screen-input">
   <nav class="nav">
-    <a class="logo" href="#"><span style="color:var(--white)">Groundwork</span><span class="logo-dot"></span><span style="color:var(--teal)">AI</span></a>
+    <a class="logo" href="#"><img class="cw-mark" src="assets/cw-logo.jpg" alt="Catalyst Works" /><span class="nav-divider"></span><span style="color:var(--white)">Groundwork</span><span class="logo-dot"></span><span style="color:var(--teal)">AI</span></a>
     <span class="nav-badge">Free Audit</span>
   </nav>
 
@@ -899,11 +1034,31 @@
 
 
 <!-- ══════════════════════════════════════════════════════════
+     EMAIL GATE MODAL
+══════════════════════════════════════════════════════════ -->
+<div id="email-gate" class="gate-overlay" role="dialog" aria-modal="true" aria-labelledby="gate-heading">
+  <div class="gate-card">
+    <div class="gate-check">✓</div>
+    <h2 class="gate-heading" id="gate-heading">Your report is ready.</h2>
+    <p class="gate-sub">Enter your email and we send it straight to you. Free. Takes 5 seconds.</p>
+    <form id="gate-form" novalidate>
+      <input type="email" id="gate-email" class="gate-input" placeholder="you@yourcompany.com" autocomplete="email" required />
+      <p class="gate-error" id="gate-error">Please enter a valid email.</p>
+      <button type="submit" class="btn btn-primary gate-submit" id="gate-submit">
+        <span id="gate-submit-label">Send my report</span>
+      </button>
+    </form>
+    <span class="gate-skip" id="gate-skip">No thanks, just show my results</span>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════════════════════════
      OUTPUT SCREEN
 ══════════════════════════════════════════════════════════ -->
 <div id="screen-output">
   <nav class="nav">
-    <a class="logo" href="#"><span style="color:var(--white)">Groundwork</span><span class="logo-dot"></span><span style="color:var(--teal)">AI</span></a>
+    <a class="logo" href="#"><img class="cw-mark" src="assets/cw-logo.jpg" alt="Catalyst Works" /><span class="nav-divider"></span><span style="color:var(--white)">Groundwork</span><span class="logo-dot"></span><span style="color:var(--teal)">AI</span></a>
     <span class="nav-badge">Your Report</span>
   </nav>
 
@@ -1392,7 +1547,10 @@ function renderPriorities(priorities) {
 
 // ── Run the audit ─────────────────────────────────────────
 
-function runAudit(industry, size, task1, task2, task3) {
+// Holds the most recent audit context so the email gate can POST it.
+let LAST_AUDIT = null;
+
+function runAudit(industry, size, task1, task2, task3, gated) {
   const t1Score = scoreWorkflow(task1);
   const t2Score = scoreWorkflow(task2);
   const t3Score = scoreWorkflow(task3);
@@ -1402,6 +1560,10 @@ function runAudit(industry, size, task1, task2, task3) {
   const roi        = calcROI(industry, size, t1Score, t2Score, t3Score);
   const priorities = selectPriorities(industry, [task1, task2, task3]);
   const meta       = scoreMeta(score);
+
+  // Strip emoji/arrow prefix from the band for a clean stored value.
+  const bandClean = meta.band.replace(/^[^\w]+/, '').trim();
+  LAST_AUDIT = { industry, size, score, band: bandClean };
 
   // Populate output
   document.getElementById('result-industry-label').textContent =
@@ -1434,11 +1596,92 @@ function runAudit(industry, size, task1, task2, task3) {
   // Radar
   renderRadar(dimensions);
 
-  // Show output screen
+  // Reveal output. When gated, show the email gate first; the report is
+  // already populated underneath so the gate's light wash shows it behind.
   document.getElementById('screen-input').style.display  = 'none';
   document.getElementById('screen-output').style.display = 'flex';
   window.scrollTo({ top: 0, behavior: 'smooth' });
+
+  if (gated) {
+    openEmailGate();
+  }
 }
+
+// ── Email gate ────────────────────────────────────────────
+
+const GROUNDWORK_ENDPOINT = 'https://agentshq.boubacarbarry.com/api/orc/groundwork-audit';
+
+function openEmailGate() {
+  const gate = document.getElementById('email-gate');
+  gate.classList.add('visible');
+  // Focus the input shortly after the rise animation starts.
+  setTimeout(() => { document.getElementById('gate-email').focus(); }, 120);
+}
+
+function closeEmailGate() {
+  document.getElementById('email-gate').classList.remove('visible');
+}
+
+function isValidEmail(v) {
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);
+}
+
+// POST the captured email + audit context. Always resolves -- a failed
+// POST must never block the visitor from seeing their report.
+async function submitGateEmail(email) {
+  const a = LAST_AUDIT || {};
+  try {
+    await fetch(GROUNDWORK_ENDPOINT, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        email: email,
+        industry: a.industry || '',
+        size: a.size || '',
+        score: typeof a.score === 'number' ? a.score : null,
+        band: a.band || '',
+      }),
+    });
+  } catch (err) {
+    // Swallow -- demo must not break. The user still gets their results.
+    console.warn('groundwork-audit POST failed (non-blocking):', err);
+  }
+}
+
+document.getElementById('gate-form').addEventListener('submit', function(e) {
+  e.preventDefault();
+  const input = document.getElementById('gate-email');
+  const errEl = document.getElementById('gate-error');
+  const email = input.value.trim();
+
+  if (!isValidEmail(email)) {
+    input.classList.add('error');
+    errEl.classList.add('visible');
+    input.focus();
+    return;
+  }
+  input.classList.remove('error');
+  errEl.classList.remove('visible');
+
+  // Show a brief sending state, fire the POST, then reveal regardless.
+  const btn = document.getElementById('gate-submit');
+  const label = document.getElementById('gate-submit-label');
+  btn.disabled = true;
+  label.innerHTML = '<div class="spinner"></div> Sending…';
+
+  submitGateEmail(email).finally(() => {
+    closeEmailGate();
+    btn.disabled = false;
+    label.textContent = 'Send my report';
+  });
+});
+
+document.getElementById('gate-email').addEventListener('input', function() {
+  this.classList.remove('error');
+  document.getElementById('gate-error').classList.remove('visible');
+});
+
+document.getElementById('gate-skip').addEventListener('click', closeEmailGate);
 
 // ── Form validation + word count ──────────────────────────
 
@@ -1544,7 +1787,7 @@ document.getElementById('audit-form').addEventListener('submit', function(e) {
 
   // Simulate a brief analysis pause (UX trust signal)
   setTimeout(() => {
-    runAudit(industry, size, task1, task2, task3);
+    runAudit(industry, size, task1, task2, task3, true);
     btn.disabled = false;
     label.innerHTML = 'Run My AI Audit →';
   }, 1400);
@@ -1579,7 +1822,8 @@ document.getElementById('demo-btn').addEventListener('click', () => {
   document.getElementById('task2').value    = DEMO_DATA.task2;
   document.getElementById('task3').value    = DEMO_DATA.task3;
   updateProgress();
-  runAudit(DEMO_DATA.industry, DEMO_DATA.size, DEMO_DATA.task1, DEMO_DATA.task2, DEMO_DATA.task3);
+  // Demo path: no email gate -- reveal the full report immediately.
+  runAudit(DEMO_DATA.industry, DEMO_DATA.size, DEMO_DATA.task1, DEMO_DATA.task2, DEMO_DATA.task3, false);
 });
 
 // ── Restart ───────────────────────────────────────────────
